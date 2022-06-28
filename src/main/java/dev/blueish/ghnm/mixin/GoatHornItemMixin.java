@@ -38,8 +38,6 @@ public class GoatHornItemMixin {
                 }
                 Vec3d finished = receiver.getPos().add(difference);
 
-                GoatHornNoiseMod.LOGGER.info(String.format("Player: %s, X: %f, Y: %f, Z: %f, D: %f", receiver.getName().getString(), finished.getX(), finished.getY(), finished.getZ(), distance));
-
                 receiver.networkHandler.sendPacket(new PlaySoundS2CPacket(soundEvent, SoundCategory.RECORDS, finished.getX(), finished.getY(), finished.getZ(), volume, 1, threadSafeRandom.nextLong()));
             } else {
                 receiver.networkHandler.sendPacket(new PlaySoundS2CPacket(soundEvent, SoundCategory.RECORDS, receiver.getX(), receiver.getY(), receiver.getZ(), 0.5F, 1, threadSafeRandom.nextLong()));
