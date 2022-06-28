@@ -1,38 +1,33 @@
 {
   "schemaVersion": 1,
-  "id": "modid",
+  "id": "goat-horn-noise-mod",
   "version": "${version}",
 
-  "name": "Example Mod",
-  "description": "This is an example description! Tell everyone what your mod is about!",
+  "name": "Goat Horn Noise Mod",
+  "description": "Make goat horn noises play to all players online",
   "authors": [
-    "Me!"
+    "BlueZeeKing24"
   ],
   "contact": {
-    "homepage": "https://fabricmc.net/",
-    "sources": "https://github.com/FabricMC/fabric-example-mod"
+    "homepage": "https://github.com/BlueZeeKing/goat-horn-noise-mod#readme",
+    "sources": "https://github.com/BlueZeeKing/goat-horn-noise-mod"
   },
 
-  "license": "CC0-1.0",
-  "icon": "assets/modid/icon.png",
+  "license": "MIT",
+  "icon": "assets/ghnm/icon.png",
 
   "environment": "*",
   "entrypoints": {
     "main": [
-      "net.fabricmc.example.ExampleMod"
+      "dev.blueish.ghnm.GoatHornNoiseMod"
     ]
   },
   "mixins": [
-    "modid.mixins.json"
+    "ghnm.mixins.json"
   ],
-
   "depends": {
     "fabricloader": ">=0.14.6",
-    "fabric": "*",
     "minecraft": "~1.19",
     "java": ">=17"
-  },
-  "suggests": {
-    "another-mod": "*"
   }
 }
