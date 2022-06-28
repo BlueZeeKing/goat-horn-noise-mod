@@ -10,6 +10,7 @@ import net.minecraft.server.Main;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
 import net.minecraft.world.event.GameEvent;
@@ -27,8 +28,22 @@ public class GoatHornItemMixin {
         float volume = instrument.range() / 16.0F;
 
         for (ServerPlayerEntity receiver : world.getServer().getPlayerManager().getPlayerList()) {
-            float distance = (float) Math.sqrt(Math.pow(receiver.getX() - player.getX(), 2) + Math.pow(receiver.getY() - player.getY(), 2) + Math.pow(receiver.getZ() - player.getZ(), 2));
-            receiver.networkHandler.sendPacket(new PlaySoundS2CPacket(soundEvent, SoundCategory.RECORDS, receiver.getX(), receiver.getY(), receiver.getZ(), Math.max(0.5F, volume - (distance/33)), 1, threadSafeRandom.nextLong()));
+            if (receiver.world.getRegistryKey() == world.getRegistryKey()) {
+                double distance = receiver.getPos().distanceTo(player.getPos());
+                Vec3d difference = player.getPos().subtract(receiver.getPos());
+
+                if (distance > 220) {
+                    double ratio = 220 / distance;
+                    difference = difference.multiply(ratio);
+                }
+                Vec3d finished = receiver.getPos().add(difference);
+
+                GoatHornNoiseMod.LOGGER.info(String.format("Player: %s, X: %f, Y: %f, Z: %f, D: %f", receiver.getName().getString(), finished.getX(), finished.getY(), finished.getZ(), distance));
+
+                receiver.networkHandler.sendPacket(new PlaySoundS2CPacket(soundEvent, SoundCategory.RECORDS, finished.getX(), finished.getY(), finished.getZ(), volume, 1, threadSafeRandom.nextLong()));
+            } else {
+                receiver.networkHandler.sendPacket(new PlaySoundS2CPacket(soundEvent, SoundCategory.RECORDS, receiver.getX(), receiver.getY(), receiver.getZ(), 0.5F, 1, threadSafeRandom.nextLong()));
+            }
         }
 
         world.emitGameEvent(GameEvent.INSTRUMENT_PLAY, player.getPos(), GameEvent.Emitter.of(player));
